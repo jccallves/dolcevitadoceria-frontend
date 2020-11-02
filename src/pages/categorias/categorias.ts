@@ -18,7 +18,6 @@ import { API_CONFIG } from '../../config/api.config';
 })
 export class CategoriasPage {
 
-  bucketUrl: string = API_CONFIG.bucketBaseUrl;
 
   items: CategoriaDTO[];
 
