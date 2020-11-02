@@ -23,13 +23,13 @@ export class CategoriasPage {
   }
 
   ionViewDidLoad() {
-    this.categoriaService.findAll()
-    .subscribe(response => {
-      console.log(response);
-    },
-    error => {
-      console.log(error);
-    });
+       this.categoriaService.findAll()
+      .subscribe(response => {
+        console.log(response);
+      },
+      error => {
+        console.log(error);
+      });
   }
 
 }
