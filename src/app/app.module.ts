@@ -16,6 +16,7 @@ import { AuthInterceptorProvider } from '../interceptors/auth-interceptor';
 import { CidadeService } from '../services/domain/cidade.service';
 import { EstadoService } from '../services/domain/estado.service';
 import { ProdutoService } from '../services/domain/produto.service';
+import { CartService } from '../services/domain/cart.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ProdutoService } from '../services/domain/produto.service';
     ErrorInterceptorProvider,
     CidadeService,
     EstadoService,
-    ProdutoService
+    ProdutoService,
+    CartService
     
   ]
 })
