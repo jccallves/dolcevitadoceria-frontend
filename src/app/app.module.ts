@@ -15,6 +15,7 @@ import { ClienteService } from '../services/domain/cliente.service';
 import { AuthInterceptorProvider } from '../interceptors/auth-interceptor';
 import { CidadeService } from '../services/domain/cidade.service';
 import { EstadoService } from '../services/domain/estado.service';
+import { ProdutoService } from '../services/domain/produto.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { EstadoService } from '../services/domain/estado.service';
     ClienteService,
     ErrorInterceptorProvider,
     CidadeService,
-    EstadoService
+    EstadoService,
+    ProdutoService
     
   ]
 })
