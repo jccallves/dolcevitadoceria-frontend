@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { IonicApp, IonicErrorHandler, IonicModule, Form } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 
@@ -17,6 +17,7 @@ import { CidadeService } from '../services/domain/cidade.service';
 import { EstadoService } from '../services/domain/estado.service';
 import { ProdutoService } from '../services/domain/produto.service';
 import { CartService } from '../services/domain/cart.service';
+import { ImageUtilService } from '../services/image-util.service';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,9 @@ import { CartService } from '../services/domain/cart.service';
     CidadeService,
     EstadoService,
     ProdutoService,
-    CartService
+    CartService,
+    ImageUtilService,
+    FormData
     
   ]
 })
