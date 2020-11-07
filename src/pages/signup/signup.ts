@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CidadeService } from '../../services/domain/cidade.service';
 import { EstadoService } from '../../services/domain/estado.service';
@@ -7,6 +7,7 @@ import { EstadoDTO } from '../../models/estado.dto';
 import { CidadeDTO } from '../../models/cidade.dto';
 import { ClienteService } from '../../services/domain/cliente.service';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
+import { AuthService } from '../../services/auth.service';
 
 @IonicPage()
 @Component({
@@ -19,6 +20,8 @@ export class SignupPage {
   estados: EstadoDTO[];
   cidades: CidadeDTO[];
 
+  private loading: any;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -26,7 +29,10 @@ export class SignupPage {
     public cidadeService: CidadeService,
     public estadoService: EstadoService,
     public clienteService: ClienteService,
-    public alertCtrl: AlertController) {
+    public alertCtrl: AlertController,
+    public auth: AuthService,
+    private loadingCtrl: LoadingController,
+    ) {
 
     this.formGroup = this.formBuilder.group({
       nome: ['Joaquim', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
@@ -67,7 +73,32 @@ export class SignupPage {
       error => {});
   }
 
+  async registerToFirebase() {
+    let email = this.formGroup.controls.email.value;
+    let senha = this.formGroup.controls.senha.value;
+    console.log(email);
+    console.log(senha);
+    await this.presentLoading();
+    try {
+      this.auth.register(email, senha);
+    } catch (error) {
+
+    } finally {
+      this.loading.dismiss();
+    }
+
+  }
+
+  async presentLoading() {
+    this.loading = this.loadingCtrl.create({
+      content: "Aguarde...",
+    });
+    return this.loading.present();
+  }
+
+
   signupUser() {
+    
     this.clienteService.insert(this.formGroup.value)
       .subscribe(response => {
         this.showInsertOk();
