@@ -22,6 +22,7 @@ import { API_CONFIG } from '../configs/api.config';
 import { AngularFireModule } from '@angular/fire'
 import { AngularFireAuthModule } from '@angular/fire/auth'
 
+
 @NgModule({
   declarations: [
     MyApp
@@ -32,6 +33,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth'
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(API_CONFIG.firebase),
     AngularFireAuthModule
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [

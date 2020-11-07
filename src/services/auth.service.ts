@@ -7,7 +7,7 @@ import { JwtHelper } from 'angular2-jwt';
 import { HttpClient } from "@angular/common/http";
 import { CartService } from "./domain/cart.service";
 import { AngularFireAuth } from "@angular/fire/auth";
-import { auth } from "firebase/app";
+import firebase from 'firebase/app'
 import { Cliente, AuthProvider, AuthOptions } from "./auth.types";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators/map";
@@ -62,10 +62,10 @@ export class AuthService {
     }
 
 
-    private signInWithEmail({email, senha}: Cliente): Promise<auth.UserCredential>{
+    private signInWithEmail({email, senha}: Cliente): Promise<firebase.auth.UserCredential>{
         return this.fireAuth.signInWithEmailAndPassword(email, senha);
     }
-    private signUpWithEmail({email, senha, name}: Cliente ): Promise<auth.UserCredential>{
+    private signUpWithEmail({email, senha, name}: Cliente ): Promise<firebase.auth.UserCredential>{
         return this.fireAuth
         .createUserWithEmailAndPassword(email, senha)
         .then(credentials => 
@@ -77,24 +77,24 @@ export class AuthService {
 
 
     //Login com redes sociais
-    private signInPopUp(provider: AuthProvider): Promise<auth.UserCredential>{
+    private signInPopUp(provider: AuthProvider): Promise<firebase.auth.UserCredential>{
         let signInProvider = null;
         switch (provider) {
             case AuthProvider.Facebook:
-                signInProvider = new auth.FacebookAuthProvider(); 
+                signInProvider = new firebase.auth.FacebookAuthProvider(); 
             break;
             case AuthProvider.Google:
-                signInProvider = new auth.GoogleAuthProvider();
+                signInProvider = new firebase.auth.GoogleAuthProvider();
             break;
             case AuthProvider.Twitter:
-                signInProvider = new auth.TwitterAuthProvider();
+                signInProvider = new firebase.auth.TwitterAuthProvider();
             break;
         }
         return this.fireAuth.signInWithPopup(signInProvider);
     }
 
-    autenticar ({isSignIn, provider, cliente}: AuthOptions): Promise<auth.UserCredential>{
-        let operation: Promise<auth.UserCredential>;
+    autenticar ({isSignIn, provider, cliente}: AuthOptions): Promise<firebase.auth.UserCredential>{
+        let operation: Promise<firebase.auth.UserCredential>;
         if (provider != AuthProvider.Email){
             operation = this.signInPopUp(provider);
         } else {
@@ -109,7 +109,11 @@ export class AuthService {
 
     }
 
-    get isAuthenticated(): Observable<boolean>{
-        return this.authState$.pipe(map(user => user != null));
+   /*  get isAuthenticated(): Observable<boolean>{
+        return this.authState$.pipe(map((user) => { user => user != null }))
+        .subscribe(user.isAuthenticated);
+        });
     }
+ */
+    
 }
