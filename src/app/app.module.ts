@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
@@ -29,7 +29,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth'
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
+    HttpClient,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(API_CONFIG.firebase),
     AngularFireAuthModule
