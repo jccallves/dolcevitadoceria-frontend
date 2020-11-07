@@ -6,17 +6,25 @@ import { StorageService } from "./storage.service";
 import { JwtHelper } from 'angular2-jwt';
 import { HttpClient } from "@angular/common/http";
 import { CartService } from "./domain/cart.service";
+import { AngularFireAuth } from "@angular/fire/auth";
+import firebase from 'firebase/app'
+import { Cliente, AuthProvider, AuthOptions } from "./auth.types";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators/map";
 
 
 @Injectable()
 export class AuthService {
 
     jwtHelper: JwtHelper = new JwtHelper();
+    authState$: Observable<firebase.User>;
 
     constructor(
         public http: HttpClient, 
         public storage: StorageService,
-        public cartService: CartService) {
+        public cartService: CartService,
+        private fireAuth: AngularFireAuth) {
+            this.authState$ = fireAuth.authState;
     }
 
     authenticate(creds : CredenciaisDTO) {
@@ -52,4 +60,60 @@ export class AuthService {
     logout() {
         this.storage.setLocalUser(null);
     }
+
+
+    private signInWithEmail({email, senha}: Cliente): Promise<firebase.auth.UserCredential>{
+        return this.fireAuth.signInWithEmailAndPassword(email, senha);
+    }
+    private signUpWithEmail({email, senha, name}: Cliente ): Promise<firebase.auth.UserCredential>{
+        return this.fireAuth
+        .createUserWithEmailAndPassword(email, senha)
+        .then(credentials => 
+            credentials.user
+            .updateProfile({displayName: name, photoURL: null})
+            .then(() => credentials)
+            );
+    }
+
+
+    //Login com redes sociais
+    private signInPopUp(provider: AuthProvider): Promise<firebase.auth.UserCredential>{
+        let signInProvider = null;
+        switch (provider) {
+            case AuthProvider.Facebook:
+                signInProvider = new firebase.auth.FacebookAuthProvider(); 
+            break;
+            case AuthProvider.Google:
+                signInProvider = new firebase.auth.GoogleAuthProvider();
+            break;
+            case AuthProvider.Twitter:
+                signInProvider = new firebase.auth.TwitterAuthProvider();
+            break;
+        }
+        return this.fireAuth.signInWithPopup(signInProvider);
+    }
+
+    autenticar ({isSignIn, provider, cliente}: AuthOptions): Promise<firebase.auth.UserCredential>{
+        let operation: Promise<firebase.auth.UserCredential>;
+        if (provider != AuthProvider.Email){
+            operation = this.signInPopUp(provider);
+        } else {
+            operation = isSignIn ? this.signInWithEmail(cliente): this.signUpWithEmail(cliente);
+        }
+        return operation;
+    }
+
+   //redes sociais 
+    logOut (): Promise<void>{
+        return this.fireAuth.signOut();
+
+    }
+
+   /*  get isAuthenticated(): Observable<boolean>{
+        return this.authState$.pipe(map((user) => { user => user != null }))
+        .subscribe(user.isAuthenticated);
+        });
+    }
+ */
+    
 }
